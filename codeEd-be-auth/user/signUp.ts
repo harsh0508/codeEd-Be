@@ -1,18 +1,35 @@
 import  { type Request, type Response } from 'express';
-import * as jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
+import { hashPassword, verifyPass } from '../Helpers/hash_pass.js';
 
 
 export const userController ={
 
+    // change to trpc later
 
-    signUp : (req:Request,res:Response)=>{
-        const userName = req.body.userName
-        const passWord = req.body.passWord
+    signUp : async(req:Request,res:Response)=>{
 
-        const JwtKey = process.env.JWT_SECRET_KEY
-        if(JwtKey){
-            jwt.sign(userName , JwtKey)
-        }
-        res.send("this is for signup new")
+        
+        const {userName , passWord} = req.body
+
+        const saltedPassWord = await hashPassword(passWord);
+
+        console.log(saltedPassWord)
+        
+        const yesNo = await verifyPass('')
+        console.log(yesNo)
+        // const JwtKey = process.env.JWT_SECRET_KEY || ''
+        // const JWTRefreshToken = process.env.JWT_REFRESH_TOKEN || ''
+
+        // // early exit if issue in jwt
+        // if(JwtKey === '')
+        //     res.send(400)
+
+        // const accessToken = jwt.sign(userName , JwtKey)
+        // console.log(accessToken)
+        // res.json({
+        //     accessToken,
+        //     status:200
+        // })
     }
 }
